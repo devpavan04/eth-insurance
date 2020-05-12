@@ -14,8 +14,8 @@ class Main extends Component {
     var tableItems = document.getElementById('productList');
     var tableRows = tableItems.getElementsByTagName('tr');
     Array.from(tableRows).forEach((item) => {
-      var itemName = item.children[1].textContent;
-      if (itemName.toLowerCase().indexOf(text) != -1) {
+      var itemName = item.children[2].textContent;
+      if (itemName.toLowerCase().indexOf(text) != -2) {
         item.style.display = 'block';
       } else {
         item.style.display = 'none';
@@ -48,13 +48,31 @@ class Main extends Component {
     console.log(this.props.products)
     return (
 
-      <div id="content" className="mt-5 border-div d-flex">
-        <div className='m-5'>
-          <div className='mb-5'>
-            <img src={isoLogo} height='400' width='400'></img>
+      <div>
+
+        <div className='div-style'>
+          <div id="content" className="d-flex">
+            <div className='mr-5 text-justify'>
+              <h1 class="display-4">Hello, world!</h1>
+              <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information. It uses utility classes for typography and spacing to space content out within the larger container. This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information. It uses utility classes for typography and spacing to space content out within the larger container. This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information. It uses utility classes for typography and spacing to space content out within the larger container. space content out within the larger container. This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information. It uses utility classes for typography and spacing to space content out within the larger container.</p>
+              <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+            </div>
+            <div className='ml-5'>
+              <img src={isoLogo} height='400' width='400' className='float-right'></img>
+            </div>
           </div>
-          <div className='clearfix'></div>
-          <h3 className='mt-4'><b>Add Product</b></h3>
+        </div>
+
+        <div id="content" className="div-style">
+          <h4><b>Account Details</b></h4>
+          <h5><b>Account Address</b></h5>
+          <h5>{this.props.account}</h5>
+          <h5><b>Account Balance</b></h5>
+          <h5>{this.props.accountBalance} ETH</h5>
+        </div>
+
+        <div id="content" className="div-style">
+          <h4><b>Add Product</b></h4>
           <form onSubmit={this.formSubmit} className=''>
             <div className="form-group mr-sm-2">
               <input
@@ -87,12 +105,14 @@ class Main extends Component {
           </form>
         </div>
 
-        <div className="m-5">
-          <h3 className='mt-2'><b>Search Product</b></h3>
+        <div id="content" className="div-style">
+          <h4><b>Search Product</b></h4>
           <input type="text" class="form-control" id="filter" placeholder="Search items..." onKeyUp={this.searchFilter}></input>
-          <p>&nbsp;</p>
-          <h3><b>Buy Product</b></h3>
-          <table className="table table-dark table-bordered table-striped">
+        </div>
+
+        <div id="content" className="div-style">
+          <h4><b>Buy Product with Insurance</b></h4>
+          <table className="table table-bordered table-striped text-center">
             <thead id='table-head'>
               <tr>
                 <th scope="col">#</th>
@@ -102,6 +122,10 @@ class Main extends Component {
                 <th scope="col">Buy Product</th>
                 <th scope="col">Insurance Price</th>
                 <th scope="col">Buy Insurance</th>
+                <th scope="col">Claims</th>
+                <th scope="col">Claims</th>
+                <th scope="col">Claims</th>
+                <th scope="col">Claims</th>
               </tr>
             </thead>
             <tbody id="productList">
@@ -127,6 +151,10 @@ class Main extends Component {
                         : product.insurancePurchased ? <i>Purchased &#10004;</i> : <i>Buy product</i>
                       }
                     </td>
+                    <td>{window.web3.utils.fromWei(product.insurancePrice.toString(), 'Ether')} Eth</td>
+                    <td>{window.web3.utils.fromWei(product.insurancePrice.toString(), 'Ether')} Eth</td>
+                    <td>{window.web3.utils.fromWei(product.insurancePrice.toString(), 'Ether')} Eth</td>
+                    <td>{window.web3.utils.fromWei(product.insurancePrice.toString(), 'Ether')} Eth</td>
                   </tr>
                 )
               })}

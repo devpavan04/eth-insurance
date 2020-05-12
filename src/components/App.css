@@ -2,20 +2,10 @@
   font-size: 1.5em;
 }
 
-.border-div {
-  width: fit-content;
-  height: fit-content;
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.4);
-  padding: 15px;
+.div-style {
+  margin-right: 50px;
+  margin-left: 50px;
+  padding: 30px;
   border-radius: 10px;
-  margin-left: 150px;
-  background: linear-gradient(
-    to right,
-    rgb(250, 115, 115),
-    rgba(255, 148, 148, 0.8)
-  );
-}
-
-.load-margin {
-  margin-left: 150px;
+  background-color: rgb(255, 255, 255);
 }

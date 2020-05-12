@@ -2,10 +2,22 @@ import React, { Component } from 'react';
 import Web3 from 'web3'
 import './App.css';
 import Insurance from '../abis/Insurance.json'
-import Navbar from './Navbar'
 import Main from './Main'
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      account: '',
+      productCount: 0,
+      products: [],
+      loading: true,
+      accountBalance: 0
+    }
+    this.createProduct = this.createProduct.bind(this)
+    this.purchaseProduct = this.purchaseProduct.bind(this)
+    this.purchaseInsurance = this.purchaseInsurance.bind(this)
+  }
 
   async componentWillMount() {
     await this.loadWeb3()
@@ -29,9 +41,11 @@ class App extends Component {
     const web3 = window.web3
 
     const accounts = await web3.eth.getAccounts()
-    console.log(accounts)
     this.setState({ account: accounts[0] })
-    console.log(this.state.account)
+
+    let accountBalance = await web3.eth.getBalance(accounts[0]);
+    accountBalance = web3.utils.fromWei(accountBalance, 'ether')
+    this.setState({ accountBalance })
 
     const networkId = await web3.eth.net.getId()
     console.log(networkId)
@@ -60,18 +74,6 @@ class App extends Component {
     }
   }
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      account: '',
-      productCount: 0,
-      products: [],
-      loading: true,
-    }
-    this.createProduct = this.createProduct.bind(this)
-    this.purchaseProduct = this.purchaseProduct.bind(this)
-    this.purchaseInsurance = this.purchaseInsurance.bind(this)
-  }
 
   createProduct = (name, price, insurancePrice) => {
     console.log(name)
@@ -106,24 +108,21 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Navbar account={this.state.account} />
-        <div className="m-5">
-          <div className="row">
-            <main role="main" className="col-lg-6 d-flex">
-              {this.state.loading
-                ?
-                <div id="loader"
-                  className="text-center mt-5"><p className="text-center"></p></div>
-                :
-                <Main
-                  products={this.state.products}
-                  createProduct={this.createProduct}
-                  purchaseProduct={this.purchaseProduct}
-                  purchaseInsurance={this.purchaseInsurance} />
-              }
-            </main>
-          </div>
-        </div>
+        <main role="main">
+          {this.state.loading
+            ?
+            <div id="loader"
+              className="text-center mt-5"><p className="text-center"></p></div>
+            :
+            <Main
+              products={this.state.products}
+              account={this.state.account}
+              accountBalance={this.state.accountBalance}
+              createProduct={this.createProduct}
+              purchaseProduct={this.purchaseProduct}
+              purchaseInsurance={this.purchaseInsurance} />
+          }
+        </main>
       </div>
     );
   }
