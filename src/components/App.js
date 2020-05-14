@@ -74,7 +74,6 @@ class App extends Component {
     }
   }
 
-
   createProduct = (name, price, insurancePrice) => {
     console.log(name)
     console.log(price)

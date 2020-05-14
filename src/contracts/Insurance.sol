@@ -15,6 +15,8 @@ contract Insurance {
         address payable insuranceOwner;
         bool purchased;
         bool insurancePurchased;
+        bool claimedPolice;
+        bool claimedRepair;
     }
 
     event ProductCreated(
@@ -25,7 +27,9 @@ contract Insurance {
         address payable owner,
         address payable insuranceOwner,
         bool purchased,
-        bool insurancePurchased
+        bool insurancePurchased,
+        bool claimedPolice,
+        bool claimedRepair
     );
 
     event ProductPurchased(
@@ -36,7 +40,9 @@ contract Insurance {
         address payable owner,
         address payable insuranceOwner,
         bool purchased,
-        bool insurancePurchased
+        bool insurancePurchased,
+        bool claimedPolice,
+        bool claimedRepair
     );
 
     event InsurancePurchased(
@@ -47,14 +53,38 @@ contract Insurance {
         address payable owner,
         address payable insuranceOwner,
         bool purchased,
-        bool insurancePurchased
+        bool insurancePurchased,
+        bool claimedPolice,
+        bool claimedRepair
     );
 
-    function createProduct(
-        string memory _name,
-        uint256 _price,
-        uint256 _insurancePrice
-    ) public {
+     event PoliceClaimed(
+        uint256 id,
+        string name,
+        uint256 price,
+        uint256 insurancePrice,
+        address payable owner,
+        address payable insuranceOwner,
+        bool purchased,
+        bool insurancePurchased,
+        bool claimedPolice,
+        bool claimedRepair
+    );
+
+    event RepairClaimed(
+        uint256 id,
+        string name,
+        uint256 price,
+        uint256 insurancePrice,
+        address payable owner,
+        address payable insuranceOwner,
+        bool purchased,
+        bool insurancePurchased,
+        bool claimedPolice,
+        bool claimedRepair
+    );
+
+    function createProduct(string memory _name, uint256 _price, uint256 _insurancePrice) public {
         // Require a valid name
         require(bytes(_name).length > 0, "");
         // Require a valid price
@@ -72,6 +102,8 @@ contract Insurance {
             msg.sender,
             msg.sender,
             false,
+            false,
+            false,
             false
         );
         // Trigger an event
@@ -82,6 +114,8 @@ contract Insurance {
             _insurancePrice,
             msg.sender,
             msg.sender,
+            false,
+            false,
             false,
             false
         );
@@ -117,6 +151,8 @@ contract Insurance {
             msg.sender,
             _product.insuranceOwner,
             true,
+            false,
+            false,
             false
         );
     }
@@ -151,7 +187,52 @@ contract Insurance {
             msg.sender,
             _product.insuranceOwner,
             true,
+            true,
+            false,
+            false
+        );
+    }
+
+    function claimPolice(uint256 _id) public {
+      Product memory _product = products[_id];
+      require(_product.purchased, 'you have not purchased the product');
+      require(_product.insurancePurchased, 'you have not purchased the insurance');
+      require(!_product.claimedRepair, 'repair is claimed for this product');
+      _product.claimedPolice = true;
+      products[_id] = _product;
+      emit PoliceClaimed(
+            productCount,
+            _product.name,
+            _product.price,
+            _product.insurancePrice,
+            _product.owner,
+            _product.insuranceOwner,
+            _product.purchased,
+            _product.insurancePurchased,
+            true,
+            _product.claimedRepair
+        );
+    }
+
+    function claimRepair(uint256 _id) public {
+      Product memory _product = products[_id];
+      require(_product.purchased, 'you have not purchased the product');
+      require(_product.insurancePurchased, 'you have not purchased the insurance');
+      require(!_product.claimedPolice, 'police is claimed for this product');
+      _product.claimedRepair = true;
+      products[_id] = _product;
+      emit RepairClaimed(
+            productCount,
+            _product.name,
+            _product.price,
+            _product.insurancePrice,
+            _product.owner,
+            _product.insuranceOwner,
+            _product.purchased,
+            _product.insurancePurchased,
+            _product.claimedPolice,
             true
         );
     }
 }
+
