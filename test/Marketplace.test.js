@@ -98,7 +98,6 @@ contract('Insurance', ([deployer, seller, buyer, police, repair]) => {
       let oldSellerBalance
       oldSellerBalance = await web3.eth.getBalance(seller)
       oldSellerBalance = new web3.utils.BN(oldSellerBalance)
-      // SUCCESS: Buyer makes purchase
       result = await insurance.purchaseInsurance(productCount, { from: buyer, value: web3.utils.toWei('5', 'Ether') })
       let newSellerBalance
       newSellerBalance = await web3.eth.getBalance(seller)
@@ -128,7 +127,8 @@ contract('Insurance', ([deployer, seller, buyer, police, repair]) => {
       await insurance.purchaseInsurance(productCount, { from: seller, value: web3.utils.toWei('5', 'Ether') }).should.be.rejected
     })
   })
-  describe('claims', async () => {
+
+  describe('can claim?', async () => {
     it('police can be claimed', async () => {
       let result, productCount
       result = await insurance.createProduct('iPhone X', web3.utils.toWei('1', 'Ether'), web3.utils.toWei('5', 'Ether'), { from: seller })
@@ -137,7 +137,7 @@ contract('Insurance', ([deployer, seller, buyer, police, repair]) => {
       productCount = await insurance.productCount()
       result = await insurance.purchaseInsurance(productCount, { from: buyer, value: web3.utils.toWei('5', 'Ether') })
       productCount = await insurance.productCount()
-      if (!result.purchased && !result.insurancePurchased && result.claimedRepair && result.claimPolice) {
+      if (!result.purchased && !result.insurancePurchased && result.claimedRepair && result.claimedPolice) {
         await insurance.claimPolice(productCount, { from: buyer }).should.be.rejected()
       } else {
         result = await insurance.claimPolice(productCount, { from: buyer })
@@ -153,13 +153,125 @@ contract('Insurance', ([deployer, seller, buyer, police, repair]) => {
       productCount = await insurance.productCount()
       result = await insurance.purchaseInsurance(productCount, { from: buyer, value: web3.utils.toWei('5', 'Ether') })
       productCount = await insurance.productCount()
-      if (!result.purchased && !result.insurancePurchased && result.claimedPolice && result.claimRepair) {
+      if (!result.purchased && !result.insurancePurchased && result.claimedPolice && result.claimedRepair) {
         await insurance.claimRepair(productCount, { from: buyer }).should.be.rejected()
       } else {
         result = await insurance.claimRepair(productCount, { from: buyer })
         const event = result.logs[0].args
         assert.equal(event.claimedRepair, true)
       }
+    })
+  })
+
+  describe('stolen', async () => {
+    it('product is stolen', async () => {
+      let result, productCount
+      result = await insurance.createProduct('iPhone X', web3.utils.toWei('1', 'Ether'), web3.utils.toWei('5', 'Ether'), { from: seller })
+      productCount = await insurance.productCount()
+      result = await insurance.purchaseProduct(productCount, { from: buyer, value: web3.utils.toWei('1', 'Ether') })
+      productCount = await insurance.productCount()
+      result = await insurance.purchaseInsurance(productCount, { from: buyer, value: web3.utils.toWei('5', 'Ether') })
+      productCount = await insurance.productCount()
+      result = await insurance.claimPolice(productCount, { from: buyer })
+      productCount = await insurance.productCount()
+      if (!result.purchased && !result.insurancePurchased && !result.claimedPolice && result.claimRepair) {
+        await insurance.stolen(productCount, { from: police }).should.be.rejected()
+      } else {
+        result = await insurance.stolen(productCount, { from: police })
+        const event = result.logs[0].args
+        assert.equal(event.isStolen, true)
+      }
+    })
+  })
+
+  describe('repaired', async () => {
+    it('product is repaired', async () => {
+      let result, productCount
+      result = await insurance.createProduct('iPhone X', web3.utils.toWei('1', 'Ether'), web3.utils.toWei('5', 'Ether'), { from: seller })
+      productCount = await insurance.productCount()
+      result = await insurance.purchaseProduct(productCount, { from: buyer, value: web3.utils.toWei('1', 'Ether') })
+      productCount = await insurance.productCount()
+      result = await insurance.purchaseInsurance(productCount, { from: buyer, value: web3.utils.toWei('5', 'Ether') })
+      productCount = await insurance.productCount()
+      result = await insurance.claimRepair(productCount, { from: buyer })
+      productCount = await insurance.productCount()
+      if (!result.purchased && !result.insurancePurchased && !result.claimedRepair && result.claimedPolice) {
+        await insurance.repaired(productCount, { from: repair }).should.be.rejected()
+      } else {
+        result = await insurance.repaired(productCount, { from: repair })
+        const event = result.logs[0].args
+        assert.equal(event.isRepaired, true)
+      }
+    })
+  })
+
+  describe('reimburesment', async () => {
+    it('reimbursement successfull', async () => {
+      let result, productCount
+      result = await insurance.createProduct('iPhone X', web3.utils.toWei('1', 'Ether'), web3.utils.toWei('5', 'Ether'), { from: seller })
+      productCount = await insurance.productCount()
+      result = await insurance.purchaseProduct(productCount, { from: buyer, value: web3.utils.toWei('1', 'Ether') })
+      productCount = await insurance.productCount()
+      result = await insurance.purchaseInsurance(productCount, { from: buyer, value: web3.utils.toWei('5', 'Ether') })
+      productCount = await insurance.productCount()
+      result = await insurance.claimPolice(productCount, { from: buyer })
+      productCount = await insurance.productCount()
+      result = await insurance.stolen(productCount, { from: police })
+      productCount = await insurance.productCount()
+      let oldBuyerBalance
+      oldBuyerBalance = await web3.eth.getBalance(buyer)
+      oldBuyerBalance = new web3.utils.BN(oldBuyerBalance)
+      result = await insurance.reimburse(productCount, { from: seller, value: web3.utils.toWei('1', 'Ether') })
+      let newBuyerBalance
+      newBuyerBalance = await web3.eth.getBalance(buyer)
+      newBuyerBalance = new web3.utils.BN(newBuyerBalance)
+      let productPrice
+      productPrice = await web3.utils.toWei('1', 'Ether')
+      productPrice = new web3.utils.BN(productPrice)
+      const exepectedBalance = oldBuyerBalance.add(productPrice)
+      assert.equal(newBuyerBalance.toString(), exepectedBalance.toString())
+      const event = result.logs[0].args
+      assert.equal(event.isReimbursed, true)
+    })
+  })
+
+  describe('pay repair shop', async () => {
+    it('repair shop is paid successfully', async () => {
+      let result, productCount
+      result = await insurance.createProduct('iPhone X', web3.utils.toWei('1', 'Ether'), web3.utils.toWei('5', 'Ether'), { from: seller })
+      productCount = await insurance.productCount()
+
+      result = await insurance.purchaseProduct(productCount, { from: buyer, value: web3.utils.toWei('1', 'Ether') })
+      productCount = await insurance.productCount()
+
+      result = await insurance.purchaseInsurance(productCount, { from: buyer, value: web3.utils.toWei('5', 'Ether') })
+      productCount = await insurance.productCount()
+
+      result = await insurance.claimRepair(productCount, { from: buyer })
+      productCount = await insurance.productCount()
+
+      result = await insurance.repaired(productCount, { from: repair })
+      productCount = await insurance.productCount()
+
+      let oldRepairBalance
+      oldRepairBalance = await web3.eth.getBalance(repair)
+      oldRepairBalance = new web3.utils.BN(oldRepairBalance)
+
+      result = await insurance.payRepairShop(productCount, repair, { from: seller, value: web3.utils.toWei('0.5', 'Ether') })
+
+      let newRepairBalance
+      newRepairBalance = await web3.eth.getBalance(repair)
+      newRepairBalance = new web3.utils.BN(newRepairBalance)
+
+      let repairCharge
+      repairCharge = await web3.utils.toWei('0.5', 'Ether')
+      repairCharge = new web3.utils.BN(repairCharge)
+
+      const exepectedBalance = oldRepairBalance.add(repairCharge)
+      assert.equal(newRepairBalance.toString(), exepectedBalance.toString())
+
+      const event = result.logs[0].args
+      assert.equal(event.isRepaired, true)
     })
   })
 })

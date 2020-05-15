@@ -1,6 +1,5 @@
 pragma solidity ^0.5.0;
 
-
 contract Insurance {
     string public name;
     uint256 public productCount = 0;
@@ -17,6 +16,10 @@ contract Insurance {
         bool insurancePurchased;
         bool claimedPolice;
         bool claimedRepair;
+        bool isStolen;
+        bool isRepaired;
+        bool isReimbursed;
+        bool paidRepairShop;
     }
 
     event ProductCreated(
@@ -29,7 +32,11 @@ contract Insurance {
         bool purchased,
         bool insurancePurchased,
         bool claimedPolice,
-        bool claimedRepair
+        bool claimedRepair,
+        bool isStolen,
+        bool isRepaired,
+        bool isReimbursed,
+        bool paidRepairShop
     );
 
     event ProductPurchased(
@@ -42,7 +49,11 @@ contract Insurance {
         bool purchased,
         bool insurancePurchased,
         bool claimedPolice,
-        bool claimedRepair
+        bool claimedRepair,
+        bool isStolen,
+        bool isRepaired,
+        bool isReimbursed,
+        bool paidRepairShop
     );
 
     event InsurancePurchased(
@@ -55,7 +66,11 @@ contract Insurance {
         bool purchased,
         bool insurancePurchased,
         bool claimedPolice,
-        bool claimedRepair
+        bool claimedRepair,
+        bool isStolen,
+        bool isRepaired,
+        bool isReimbursed,
+        bool paidRepairShop
     );
 
      event PoliceClaimed(
@@ -68,7 +83,11 @@ contract Insurance {
         bool purchased,
         bool insurancePurchased,
         bool claimedPolice,
-        bool claimedRepair
+        bool claimedRepair,
+        bool isStolen,
+        bool isRepaired,
+        bool isReimbursed,
+        bool paidRepairShop
     );
 
     event RepairClaimed(
@@ -81,7 +100,79 @@ contract Insurance {
         bool purchased,
         bool insurancePurchased,
         bool claimedPolice,
-        bool claimedRepair
+        bool claimedRepair,
+        bool isStolen,
+        bool isRepaired,
+        bool isReimbursed,
+        bool paidRepairShop
+    );
+
+    event Stolen(
+        uint256 id,
+        string name,
+        uint256 price,
+        uint256 insurancePrice,
+        address payable owner,
+        address payable insuranceOwner,
+        bool purchased,
+        bool insurancePurchased,
+        bool claimedPolice,
+        bool claimedRepair,
+        bool isStolen,
+        bool isRepaired,
+        bool isReimbursed,
+        bool paidRepairShop
+    );
+
+    event Repaired(
+        uint256 id,
+        string name,
+        uint256 price,
+        uint256 insurancePrice,
+        address payable owner,
+        address payable insuranceOwner,
+        bool purchased,
+        bool insurancePurchased,
+        bool claimedPolice,
+        bool claimedRepair,
+        bool isStolen,
+        bool isRepaired,
+        bool isReimbursed,
+        bool paidRepairShop
+    );
+
+    event Reimbursed(
+        uint256 id,
+        string name,
+        uint256 price,
+        uint256 insurancePrice,
+        address payable owner,
+        address payable insuranceOwner,
+        bool purchased,
+        bool insurancePurchased,
+        bool claimedPolice,
+        bool claimedRepair,
+        bool isStolen,
+        bool isRepaired,
+        bool isReimbursed,
+        bool paidRepairShop
+    );
+
+     event RepairShopPaid(
+        uint256 id,
+        string name,
+        uint256 price,
+        uint256 insurancePrice,
+        address payable owner,
+        address payable insuranceOwner,
+        bool purchased,
+        bool insurancePurchased,
+        bool claimedPolice,
+        bool claimedRepair,
+        bool isStolen,
+        bool isRepaired,
+        bool isReimbursed,
+        bool paidRepairShop
     );
 
     function createProduct(string memory _name, uint256 _price, uint256 _insurancePrice) public {
@@ -104,6 +195,10 @@ contract Insurance {
             false,
             false,
             false,
+            false,
+            false,
+            false,
+            false,
             false
         );
         // Trigger an event
@@ -114,6 +209,10 @@ contract Insurance {
             _insurancePrice,
             msg.sender,
             msg.sender,
+            false,
+            false,
+            false,
+            false,
             false,
             false,
             false,
@@ -151,9 +250,13 @@ contract Insurance {
             msg.sender,
             _product.insuranceOwner,
             true,
-            false,
-            false,
-            false
+            _product.insurancePurchased,
+            _product.claimedPolice,
+            _product.claimedRepair,
+            _product.isStolen,
+            _product.isRepaired,
+            _product.isReimbursed,
+            _product.paidRepairShop
         );
     }
 
@@ -184,12 +287,16 @@ contract Insurance {
             _product.name,
             _product.price,
             _product.insurancePrice,
-            msg.sender,
+            _product.owner,
             _product.insuranceOwner,
+            _product.purchased,
             true,
-            true,
-            false,
-            false
+            _product.claimedPolice,
+            _product.claimedRepair,
+            _product.isStolen,
+            _product.isRepaired,
+            _product.isReimbursed,
+            _product.paidRepairShop
         );
     }
 
@@ -211,7 +318,11 @@ contract Insurance {
             _product.purchased,
             _product.insurancePurchased,
             true,
-            _product.claimedRepair
+            _product.claimedRepair,
+            _product.isStolen,
+            _product.isRepaired,
+            _product.isReimbursed,
+            _product.paidRepairShop
         );
     }
 
@@ -233,7 +344,118 @@ contract Insurance {
             _product.purchased,
             _product.insurancePurchased,
             _product.claimedPolice,
-            true
+            true,
+            _product.isStolen,
+            _product.isRepaired,
+            _product.isReimbursed,
+            _product.paidRepairShop
         );
+    }
+
+    function stolen(uint256 _id) public {
+      Product memory _product = products[_id];
+      require(_product.purchased, 'you have not purchased the product');
+      require(_product.insurancePurchased, 'you have not purchased the insurance');
+      require(!_product.claimedRepair, 'repair service is claimed for this item');
+      require(_product.claimedPolice, 'police service should be claimed first');
+      _product.isStolen = true;
+      products[_id] = _product;
+      emit Stolen(
+        productCount,
+        _product.name,
+        _product.price,
+        _product.insurancePrice,
+        _product.owner,
+        _product.insuranceOwner,
+        _product.purchased,
+        _product.insurancePurchased,
+        _product.claimedPolice,
+        _product.claimedRepair,
+        true,
+        _product.isRepaired,
+        _product.isReimbursed,
+        _product.paidRepairShop
+      );
+    }
+
+    function repaired(uint _id) public {
+       Product memory _product = products[_id];
+      require(_product.purchased, 'you have not purchased the product');
+      require(_product.insurancePurchased, 'you have not purchased the insurance');
+      require(!_product.claimedPolice, 'police service is claimed for this item');
+      require(_product.claimedRepair, 'repair service should be claimed first');
+      _product.isRepaired = true;
+      products[_id] = _product;
+      emit Repaired(
+        productCount,
+        _product.name,
+        _product.price,
+        _product.insurancePrice,
+        _product.owner,
+        _product.insuranceOwner,
+        _product.purchased,
+        _product.insurancePurchased,
+        _product.claimedPolice,
+        _product.claimedRepair,
+        _product.isStolen,
+        true,
+        _product.isReimbursed,
+        _product.paidRepairShop
+
+      );
+    }
+
+    function reimburse(uint256 _id) public payable {
+      Product memory _product = products[_id];
+      require(_product.isStolen, 'not stolen');
+      address payable _refundTo = _product.owner;
+      require(_refundTo != msg.sender, "");
+      _product.isReimbursed = true;
+      products[_id] = _product;
+      // refund the money to the product owner
+      address(_refundTo).transfer(msg.value);
+      emit Reimbursed(
+        productCount,
+        _product.name,
+        _product.price,
+        _product.insurancePrice,
+        _product.owner,
+        _product.insuranceOwner,
+        _product.purchased,
+        _product.insurancePurchased,
+        _product.claimedPolice,
+        _product.claimedRepair,
+        _product.isStolen,
+        _product.isRepaired,
+        true,
+        _product.paidRepairShop
+      );
+    }
+
+    function payRepairShop(uint256 _id, address payable _repairShop) public payable {
+      Product memory _product = products[_id];
+      uint256 repairCharge = _product.price / 2;
+      require(_product.isRepaired, 'not repaired');
+      require(msg.value == repairCharge, 'repair charge is not correct');
+      _product.paidRepairShop = true;
+      products[_id] = _product;
+      // add repair amount to repair shop
+      address(_repairShop).transfer(msg.value);
+      emit RepairShopPaid(
+        productCount,
+        _product.name,
+        _product.price,
+        _product.insurancePrice,
+        _product.owner,
+        _product.insuranceOwner,
+        _product.purchased,
+        _product.insurancePurchased,
+        _product.claimedPolice,
+        _product.claimedRepair,
+        _product.isStolen,
+        _product.isRepaired,
+        _product.isReimbursed,
+        true
+      );
     }
 }
