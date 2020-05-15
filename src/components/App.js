@@ -67,6 +67,7 @@ class App extends Component {
         this.setState({
           products: [...this.state.products, product]
         })
+        console.log(this.state.products)
       }
       this.setState({ loading: false })
     } else {
@@ -104,6 +105,16 @@ class App extends Component {
       })
   }
 
+  policeClaim = (id) => {
+    this.setState({ loading: true })
+    this.state.insurance.methods.claimPolice(id).send({ from: this.state.account })
+  }
+
+  repairClaim = (id) => {
+    this.setState({ loading: true })
+    this.state.insurance.methods.claimRepair(id).send({ from: this.state.account })
+  }
+
   render() {
     return (
       <div>
@@ -119,7 +130,9 @@ class App extends Component {
               accountBalance={this.state.accountBalance}
               createProduct={this.createProduct}
               purchaseProduct={this.purchaseProduct}
-              purchaseInsurance={this.purchaseInsurance} />
+              purchaseInsurance={this.purchaseInsurance}
+              policeClaim={this.policeClaim}
+              repairClaim={this.repairClaim} />
           }
         </main>
       </div>

@@ -240,36 +240,26 @@ contract('Insurance', ([deployer, seller, buyer, police, repair]) => {
       let result, productCount
       result = await insurance.createProduct('iPhone X', web3.utils.toWei('1', 'Ether'), web3.utils.toWei('5', 'Ether'), { from: seller })
       productCount = await insurance.productCount()
-
       result = await insurance.purchaseProduct(productCount, { from: buyer, value: web3.utils.toWei('1', 'Ether') })
       productCount = await insurance.productCount()
-
       result = await insurance.purchaseInsurance(productCount, { from: buyer, value: web3.utils.toWei('5', 'Ether') })
       productCount = await insurance.productCount()
-
       result = await insurance.claimRepair(productCount, { from: buyer })
       productCount = await insurance.productCount()
-
       result = await insurance.repaired(productCount, { from: repair })
       productCount = await insurance.productCount()
-
       let oldRepairBalance
       oldRepairBalance = await web3.eth.getBalance(repair)
       oldRepairBalance = new web3.utils.BN(oldRepairBalance)
-
       result = await insurance.payRepairShop(productCount, repair, { from: seller, value: web3.utils.toWei('0.5', 'Ether') })
-
       let newRepairBalance
       newRepairBalance = await web3.eth.getBalance(repair)
       newRepairBalance = new web3.utils.BN(newRepairBalance)
-
       let repairCharge
       repairCharge = await web3.utils.toWei('0.5', 'Ether')
       repairCharge = new web3.utils.BN(repairCharge)
-
       const exepectedBalance = oldRepairBalance.add(repairCharge)
       assert.equal(newRepairBalance.toString(), exepectedBalance.toString())
-
       const event = result.logs[0].args
       assert.equal(event.isRepaired, true)
     })

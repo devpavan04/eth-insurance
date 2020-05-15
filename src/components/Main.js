@@ -44,24 +44,32 @@ class Main extends Component {
     this.props.purchaseInsurance(event.target.name, event.target.value, event.target.owner)
   }
 
+  claimPolice = (event) => {
+    this.props.policeClaim(event.target.name)
+  }
+
+  claimRepair = (event) => {
+    this.props.repairClaim(event.target.name)
+  }
+
   render() {
     console.log(this.props.products)
     return (
 
       <div>
 
-        <div className='div-style'>
+        {/* <div className='div-style'>
           <div id="content" className="d-flex">
             <div className='mr-5 text-justify'>
               <h1 class="display-4">Hello, world!</h1>
-              <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information. It uses utility classes for typography and spacing to space content out within the larger container. This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information. It uses utility classes for typography and spacing to space content out within the larger container. This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information. It uses utility classes for typography and spacing to space content out within the larger container. space content out within the larger container. This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information. It uses utility classes for typography and spacing to space content out within the larger container.</p>
+              <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information. It uses utility classes for typography and spacing to space content out within the larger container. This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information. It uses utility classes for typography and spacing to space content out within the larger container. This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information. It uses utility classes for typography and spacing to space content out within the larger container. space content out within the larger container. This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information. It uses utility classes for typography and spacing to space content out within the larger container.</p>
               <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
             </div>
             <div className='ml-5'>
               <img src={isoLogo} height='400' width='400' className='float-right'></img>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div id="content" className="div-style">
           <h4><b>Account Details</b></h4>
@@ -122,14 +130,13 @@ class Main extends Component {
                 <th scope="col">Buy Product</th>
                 <th scope="col">Insurance Price</th>
                 <th scope="col">Buy Insurance</th>
-                <th scope="col">Claims</th>
-                <th scope="col">Claims</th>
-                <th scope="col">Claims</th>
-                <th scope="col">Claims</th>
+                <th scope="col">Police</th>
+                <th scope="col">Repair</th>
               </tr>
             </thead>
             <tbody id="productList">
               {this.props.products.map((product, key) => {
+                console.log(product)
                 return (
                   <tr key={key}>
                     <th scope="row">{product.id.toString()}</th>
@@ -151,10 +158,56 @@ class Main extends Component {
                         : product.insurancePurchased ? <i>Purchased &#10004;</i> : <i>Buy product</i>
                       }
                     </td>
-                    <td>{window.web3.utils.fromWei(product.insurancePrice.toString(), 'Ether')} Eth</td>
-                    <td>{window.web3.utils.fromWei(product.insurancePrice.toString(), 'Ether')} Eth</td>
-                    <td>{window.web3.utils.fromWei(product.insurancePrice.toString(), 'Ether')} Eth</td>
-                    <td>{window.web3.utils.fromWei(product.insurancePrice.toString(), 'Ether')} Eth</td>
+                    <td>
+                      {
+                        !product.claimedPolice && !product.claimedRepair && product.purchased && product.insurancePurchased
+                          ?
+                          <button className='btn btn-primary btn-block' type="submit" name={product.id} onClick={this.claimPolice}>Claim Police</button>
+                          :
+                          product.claimedPolice
+                            ?
+                            <i><b>Police claimed!</b></i>
+                            :
+                            product.claimedRepair
+                              ?
+                              <i>Claimed repair already!</i>
+                              :
+                              !product.purchased
+                                ?
+                                <i>Buy Product</i>
+                                :
+                                !product.insurancePurchased
+                                  ?
+                                  <i>Buy Insurance</i>
+                                  :
+                                  null
+                      }
+                    </td>
+                    <td>
+                      {
+                        !product.claimedRepair && !product.claimedPolice && product.purchased && product.insurancePurchased
+                          ?
+                          <button className='btn btn-primary btn-block' type="submit" name={product.id} onClick={this.claimRepair}>Claim Repair</button>
+                          :
+                          product.claimedRepair
+                            ?
+                            <i><b>Repair claimed!</b></i>
+                            :
+                            product.claimedPolice
+                              ?
+                              <i>Claimed police already!</i>
+                              :
+                              !product.purchased
+                                ?
+                                <i>Buy Product</i>
+                                :
+                                !product.insurancePurchased
+                                  ?
+                                  <i>Buy Insurance</i>
+                                  :
+                                  null
+                      }
+                    </td>
                   </tr>
                 )
               })}
