@@ -198,6 +198,7 @@ contract Insurance {
       require(_product.purchased, 'you have not purchased the product');
       require(_product.insurancePurchased, 'you have not purchased the insurance');
       require(!_product.claimedRepair, 'repair is claimed for this product');
+      require(!_product.claimedPolice, 'police is claimed for this product');
       _product.claimedPolice = true;
       products[_id] = _product;
       emit PoliceClaimed(
@@ -219,6 +220,7 @@ contract Insurance {
       require(_product.purchased, 'you have not purchased the product');
       require(_product.insurancePurchased, 'you have not purchased the insurance');
       require(!_product.claimedPolice, 'police is claimed for this product');
+      require(!_product.claimedRepair, 'repair is claimed for this product');
       _product.claimedRepair = true;
       products[_id] = _product;
       emit RepairClaimed(
@@ -235,4 +237,3 @@ contract Insurance {
         );
     }
 }
-

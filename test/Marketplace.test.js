@@ -128,7 +128,7 @@ contract('Insurance', ([deployer, seller, buyer, police, repair]) => {
       await insurance.purchaseInsurance(productCount, { from: seller, value: web3.utils.toWei('5', 'Ether') }).should.be.rejected
     })
   })
-	 describe('claims', async () => {
+  describe('claims', async () => {
     it('police can be claimed', async () => {
       let result, productCount
       result = await insurance.createProduct('iPhone X', web3.utils.toWei('1', 'Ether'), web3.utils.toWei('5', 'Ether'), { from: seller })
@@ -137,13 +137,11 @@ contract('Insurance', ([deployer, seller, buyer, police, repair]) => {
       productCount = await insurance.productCount()
       result = await insurance.purchaseInsurance(productCount, { from: buyer, value: web3.utils.toWei('5', 'Ether') })
       productCount = await insurance.productCount()
-      if (!result.purchased && !result.insurancePurchased && result.claimedRepair) {
+      if (!result.purchased && !result.insurancePurchased && result.claimedRepair && result.claimPolice) {
         await insurance.claimPolice(productCount, { from: buyer }).should.be.rejected()
       } else {
         result = await insurance.claimPolice(productCount, { from: buyer })
         const event = result.logs[0].args
-        assert.equal(event.insurancePurchased, true)
-        assert.equal(event.claimedRepair, false)
         assert.equal(event.claimedPolice, true)
       }
     })
@@ -155,13 +153,11 @@ contract('Insurance', ([deployer, seller, buyer, police, repair]) => {
       productCount = await insurance.productCount()
       result = await insurance.purchaseInsurance(productCount, { from: buyer, value: web3.utils.toWei('5', 'Ether') })
       productCount = await insurance.productCount()
-      if (!result.purchased && !result.insurancePurchased && result.claimedPolice) {
+      if (!result.purchased && !result.insurancePurchased && result.claimedPolice && result.claimRepair) {
         await insurance.claimRepair(productCount, { from: buyer }).should.be.rejected()
       } else {
         result = await insurance.claimRepair(productCount, { from: buyer })
         const event = result.logs[0].args
-        assert.equal(event.insurancePurchased, true)
-        assert.equal(event.claimedPolice, false)
         assert.equal(event.claimedRepair, true)
       }
     })
