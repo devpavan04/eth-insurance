@@ -13,9 +13,6 @@ class Main extends Component {
     const name = this.productName.value
     const price = window.web3.utils.toWei(this.productPrice.value.toString(), 'Ether')
     const insurancePrice = window.web3.utils.toWei(this.insurancePrice.value.toString(), 'Ether')
-    console.log(name)
-    console.log(price)
-    console.log(insurancePrice)
     this.props.createProduct(name, price, insurancePrice)
   }
 
@@ -66,7 +63,7 @@ class Main extends Component {
             ?
             <div className='div-style'>
               <div className='mr-5 text-justify'>
-                <h1 class="display-4">Hello, Seller!</h1>
+                <h1 class="display-4">Hello, Shop!</h1>
               </div>
             </div>
             :
