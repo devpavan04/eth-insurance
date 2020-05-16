@@ -100,7 +100,7 @@ class App extends Component {
     console.log(id)
     console.log(price)
     this.setState({ loading: true })
-    this.state.insurance.methods.purchaseProduct(id).send({ from: this.state.account, value: price })
+    this.state.insurance.methods.purchaseProduct(id, this.state.repairAccount, this.state.policeAccount).send({ from: this.state.account, value: price })
       .on('receipt', (receipt) => {
         console.log(receipt);
       })
@@ -108,7 +108,7 @@ class App extends Component {
 
   purchaseInsurance = (id, insurancePrice) => {
     this.setState({ loading: true })
-    this.state.insurance.methods.purchaseInsurance(id).send({ from: this.state.account, value: insurancePrice })
+    this.state.insurance.methods.purchaseInsurance(id, this.state.repairAccount, this.state.policeAccount).send({ from: this.state.account, value: insurancePrice })
       .on('receipt', (receipt) => {
         console.log(receipt);
       })
@@ -116,32 +116,27 @@ class App extends Component {
 
   policeClaim = (id) => {
     this.setState({ loading: true })
-    this.state.insurance.methods.claimPolice(id).send({ from: this.state.account })
+    this.state.insurance.methods.claimPolice(id, this.state.repairAccount, this.state.policeAccount).send({ from: this.state.account })
   }
 
   repairClaim = (id) => {
     this.setState({ loading: true })
-    this.state.insurance.methods.claimRepair(id).send({ from: this.state.account })
+    this.state.insurance.methods.claimRepair(id, this.state.repairAccount, this.state.policeAccount).send({ from: this.state.account })
   }
 
   stolen = (id) => {
     this.setState({ loading: true })
-    this.state.insurance.methods.stolen(id).send({ from: this.state.account })
-  }
-
-  notStolen = (id) => {
-    this.setState({ loading: true })
-    this.state.insurance.methods.notStolen(id).send({ from: this.state.account })
+    this.state.insurance.methods.stolen(id, this.state.repairAccount, this.state.policeAccount).send({ from: this.state.account })
   }
 
   repaired = (id) => {
     this.setState({ loading: true })
-    this.state.insurance.methods.repaired(id).send({ from: this.state.account })
+    this.state.insurance.methods.repaired(id, this.state.repairAccount, this.state.policeAccount).send({ from: this.state.account })
   }
 
   reimburse = (id, productPrice) => {
     this.setState({ loading: true })
-    this.state.insurance.methods.reimburse(id).send({ from: this.state.account, value: productPrice })
+    this.state.insurance.methods.reimburse(id, this.state.repairAccount, this.state.policeAccount).send({ from: this.state.account, value: productPrice })
       .on('receipt', (receipt) => {
         console.log(receipt);
       })
@@ -149,7 +144,7 @@ class App extends Component {
 
   payRepairShop = (id, repairFee) => {
     this.setState({ loading: true })
-    this.state.insurance.methods.payRepairShop(id, this.state.repairAccount).send({ from: this.state.account, value: repairFee })
+    this.state.insurance.methods.payRepairShop(id, this.state.repairAccount, this.state.policeAccount).send({ from: this.state.account, value: repairFee })
       .on('receipt', (receipt) => {
         console.log(receipt);
       })
@@ -174,7 +169,6 @@ class App extends Component {
               policeClaim={this.policeClaim}
               repairClaim={this.repairClaim}
               stolen={this.stolen}
-              notStolen={this.notStolen}
               repaired={this.repaired}
               reimburse={this.reimburse}
               payRepairShop={this.payRepairShop}

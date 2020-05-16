@@ -63,7 +63,7 @@ class Main extends Component {
             ?
             <div className='div-style'>
               <div className='mr-5 text-justify'>
-                <h1 class="display-4">Hello, Shop!</h1>
+                <h1 class="display-4">Hello, Product Shop!</h1>
               </div>
             </div>
             :
@@ -281,11 +281,11 @@ class Main extends Component {
                                         ?
                                         <i>Claimed</i>
                                         :
-                                        product.claimedRepair && !product.isReimbursed
+                                        product.claimedRepair && !product.isRepaired
                                           ?
                                           <i>Claimed</i>
                                           :
-                                          product.isReimbursed
+                                          product.isReimbursed && product.isStolen
                                             ?
                                             <i>Reimbursed</i>
                                             :
@@ -297,15 +297,11 @@ class Main extends Component {
                                                 ?
                                                 <i>Claimed</i>
                                                 :
-                                                product.paidRepairShop
+                                                product.paidRepairShop && product.isRepaired
                                                   ?
-                                                  <i>Reimbursed</i>
+                                                  <i>Paid Repair Shop</i>
                                                   :
-                                                  product.paidRepairShop
-                                                    ?
-                                                    <i>Paid Repair Fee</i>
-                                                    :
-                                                    null
+                                                  null
 
                           }
                         </td>
@@ -332,8 +328,8 @@ class Main extends Component {
                     product.claimedPolice && !product.isStolen
                       ?
                       <div className='mb-3 mt-3'>
-                        <h5><b><i>{`${product.name}`}</i></b></h5>
-                        <button className='mr-2 btn btn-primary btn-sm' name={product.id} onClick={this.stolen}>Stolen</button>
+                        <h5><b><i>{`${product.name} owned by : ${product.owner}`}</i></b></h5>
+                        <button className='mr-2 btn btn-primary' name={product.id} onClick={this.stolen}>Stolen</button>
                       </div>
                       :
                       product.isStolen
@@ -378,7 +374,6 @@ class Main extends Component {
             :
             null
         }
-
 
       </div>
     );
