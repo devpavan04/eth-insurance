@@ -359,7 +359,7 @@ class Main extends Component {
                       ?
                       <div className='mb-3 mt-3'>
                         <h5><b><i>{`${product.name}`}</i></b></h5>
-                        <button className='mr-2 btn btn-primary btn-sm' name={product.id} onClick={this.repaired}>Repair</button>
+                        <button className='mr-2 btn btn-primary' name={product.id} onClick={this.repaired}>Repair</button>
                       </div>
                       :
                       product.isRepaired
