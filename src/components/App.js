@@ -12,7 +12,10 @@ class App extends Component {
       productCount: 0,
       products: [],
       loading: true,
-      accountBalance: 0
+      accountBalance: 0,
+      sellerAccount: '',
+      policeAccount: '',
+      repairAccount: ''
     }
     this.createProduct = this.createProduct.bind(this)
     this.purchaseProduct = this.purchaseProduct.bind(this)
@@ -21,6 +24,7 @@ class App extends Component {
 
   async componentWillMount() {
     await this.loadWeb3()
+    await this.getAllAccounts()
     await this.loadBlockchainData()
   }
 
@@ -37,10 +41,18 @@ class App extends Component {
     }
   }
 
+  async getAllAccounts() {
+    var Web3 = require('web3');
+    let web3 = new Web3('HTTP://127.0.0.1:7545')
+    const accounts = await web3.eth.getAccounts()
+    this.setState({ sellerAccount: accounts[9], policeAccount: accounts[8], repairAccount: accounts[7] })
+  }
+
   async loadBlockchainData() {
     const web3 = window.web3
 
     const accounts = await web3.eth.getAccounts()
+    console.log(accounts)
     this.setState({ account: accounts[0] })
 
     let accountBalance = await web3.eth.getBalance(accounts[0]);
@@ -55,10 +67,8 @@ class App extends Component {
 
     if (networkData) {
       const insurance = web3.eth.Contract(Insurance.abi, networkData.address)
-      console.log(await insurance.methods.productCount().call())
       this.setState({ insurance })
       const productCount = await insurance.methods.productCount().call()
-      console.log(productCount)
       this.setState({ productCount: productCount })
 
       // Load products
@@ -67,7 +77,6 @@ class App extends Component {
         this.setState({
           products: [...this.state.products, product]
         })
-        console.log(this.state.products)
       }
       this.setState({ loading: false })
     } else {
@@ -115,6 +124,37 @@ class App extends Component {
     this.state.insurance.methods.claimRepair(id).send({ from: this.state.account })
   }
 
+  stolen = (id) => {
+    this.setState({ loading: true })
+    this.state.insurance.methods.stolen(id).send({ from: this.state.account })
+  }
+
+  notStolen = (id) => {
+    this.setState({ loading: true })
+    this.state.insurance.methods.notStolen(id).send({ from: this.state.account })
+  }
+
+  repaired = (id) => {
+    this.setState({ loading: true })
+    this.state.insurance.methods.repaired(id).send({ from: this.state.account })
+  }
+
+  reimburse = (id, productPrice) => {
+    this.setState({ loading: true })
+    this.state.insurance.methods.reimburse(id).send({ from: this.state.account, value: productPrice })
+      .on('receipt', (receipt) => {
+        console.log(receipt);
+      })
+  }
+
+  payRepairShop = (id, repairFee) => {
+    this.setState({ loading: true })
+    this.state.insurance.methods.payRepairShop(id, this.state.repairAccount).send({ from: this.state.account, value: repairFee })
+      .on('receipt', (receipt) => {
+        console.log(receipt);
+      })
+  }
+
   render() {
     return (
       <div>
@@ -132,7 +172,15 @@ class App extends Component {
               purchaseProduct={this.purchaseProduct}
               purchaseInsurance={this.purchaseInsurance}
               policeClaim={this.policeClaim}
-              repairClaim={this.repairClaim} />
+              repairClaim={this.repairClaim}
+              stolen={this.stolen}
+              notStolen={this.notStolen}
+              repaired={this.repaired}
+              reimburse={this.reimburse}
+              payRepairShop={this.payRepairShop}
+              repairAccount={this.state.repairAccount}
+              policeAccount={this.state.policeAccount}
+              sellerAccount={this.state.sellerAccount} />
           }
         </main>
       </div>

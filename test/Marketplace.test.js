@@ -66,7 +66,6 @@ contract('Insurance', ([deployer, seller, buyer, police, repair]) => {
       assert.equal(event.price, '1000000000000000000', 'price is correct')
       assert.equal(event.owner, buyer, 'owner is correct')
       assert.equal(event.purchased, true, 'purchased is correct')
-      assert.equal(event.insurancePurchased, false, 'insurance purchased is correct')
       let newSellerBalance
       newSellerBalance = await web3.eth.getBalance(seller)
       newSellerBalance = new web3.utils.BN(newSellerBalance)
@@ -261,7 +260,7 @@ contract('Insurance', ([deployer, seller, buyer, police, repair]) => {
       const exepectedBalance = oldRepairBalance.add(repairCharge)
       assert.equal(newRepairBalance.toString(), exepectedBalance.toString())
       const event = result.logs[0].args
-      assert.equal(event.isRepaired, true)
+      assert.equal(event.paidRepairShop, true)
     })
   })
 })
