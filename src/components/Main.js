@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
-import isoLogo from '../images/isometric.png'
+import Shop from './Shop.png'
+import Buyer from './Buyer.png'
+import Police from './Police.png'
+import Repair from './Repair.png'
 import './App.css'
 
 class Main extends Component {
@@ -61,9 +64,12 @@ class Main extends Component {
         {
           this.props.account == this.props.sellerAccount
             ?
-            <div className='div-style'>
+            <div className='div-style  styly-heading'>
+              <div className='float-right'>
+                <img src={Shop} width='300px'></img>
+              </div>
               <div className='mr-5 text-justify'>
-                <h1 class="display-4">Hello, Product Shop!</h1>
+                <h1 class="display-4"><b>Product Shop</b></h1>
               </div>
             </div>
             :
@@ -74,8 +80,11 @@ class Main extends Component {
           this.props.account == this.props.policeAccount
             ?
             <div className='div-style'>
-              <div className='mr-5 text-justify'>
-                <h1 class="display-4">Hello, Police Department!</h1>
+              <div className='float-right'>
+                <img src={Police} width='300px'></img>
+              </div>
+              <div className='mr-5 text-justify styly-heading'>
+                <h1 class="display-4">Police Department</h1>
               </div>
             </div>
             :
@@ -86,8 +95,11 @@ class Main extends Component {
           this.props.account == this.props.repairAccount
             ?
             <div className='div-style'>
-              <div className='mr-5 text-justify'>
-                <h1 class="display-4">Hello, Repair Shop!</h1>
+              <div className='float-right'>
+                <img src={Repair} width='300px'></img>
+              </div>
+              <div className='mr-5 text-justify styly-heading'>
+                <h1 class="display-4">Repair Shop</h1>
               </div>
             </div>
             :
@@ -98,7 +110,10 @@ class Main extends Component {
           this.props.account !== this.props.sellerAccount && this.props.account !== this.props.policeAccount && this.props.account !== this.props.repairAccount
             ?
             <div className='div-style'>
-              <div className='mr-5 text-justify'>
+              <div className='float-right'>
+                <img src={Buyer} width='300px'></img>
+              </div>
+              <div className='mr-5 text-justify styly-heading'>
                 <h1 class="display-4">Hello, Buyer!</h1>
               </div>
             </div>
@@ -106,19 +121,18 @@ class Main extends Component {
             null
         }
 
-        <div id="content" className="div-style">
-          <h4><b>Account Details</b></h4>
-          <h6><i>Account Address :</i></h6>
+        <div id="content" className="div-style account-details">
+          <h4><b><i>Account Address :</i></b></h4>
           <h5>{this.props.account}</h5>
-          <h6><i>Account Balance :</i></h6>
+          <h4><b><i>Account Balance :</i></b></h4>
           <h5>{this.props.accountBalance} ETH</h5>
         </div>
 
         {
           this.props.account == this.props.sellerAccount
             ?
-            <div id="content" className="div-style">
-              <h4><b>Add Product</b></h4>
+            <div id="content" className="div-style form-style">
+              <h4><b>Add Product :</b></h4>
               <form onSubmit={this.formSubmit} className=''>
                 <div className="form-group mr-sm-2">
                   <input
@@ -158,8 +172,8 @@ class Main extends Component {
           this.props.account !== this.props.policeAccount && this.props.account !== this.props.repairAccount
             ?
             <div id="content" className="div-style">
-              <h4><b>Buy Product with Insurance</b></h4>
-              <table className="table table-bordered table-striped text-center">
+              <h4 className='mb-3'><b>Buy Product with Insurance :</b></h4>
+              <table className="table table-bordered table-striped text-center table-dark">
                 <thead id='table-head'>
                   <tr>
                     <th scope="col">#</th>
@@ -319,22 +333,22 @@ class Main extends Component {
           this.props.account == this.props.policeAccount
             ?
             <div id="content" className="div-style">
-              <h4><b>Notifications and Feed</b></h4>
-              <h6><i>Police Verifications :</i></h6>
+              <h4><b>Notifications and Feed :</b></h4>
               {
                 this.props.products.map((product, key) => {
                   console.log(product)
                   return (
                     product.claimedPolice && !product.isStolen
                       ?
-                      <div className='mb-3 mt-3'>
-                        <h5><b><i>{`${product.name} owned by : ${product.owner}`}</i></b></h5>
-                        <button className='mr-2 btn btn-primary' name={product.id} onClick={this.stolen}>Stolen</button>
+                      <div className='mb-3 mt-3 notification-border shadow p-2'>
+                        <h5><b>{`${product.name} owned by ${product.owner} is claimed to be stolen, please verify.`}<button className='ml-2 btn btn-dark' name={product.id} onClick={this.stolen}>Stolen</button></b></h5>
                       </div>
                       :
                       product.isStolen
                         ?
-                        <h6 className='mt-3'><b><i>{`${product.name} owned by ${product.owner} is stolen.`}</i></b></h6>
+                        <div className='mb-3 mt-3 notification-border shadow p-2'>
+                          <h5><b>{`${product.name} owned by ${product.owner} is stolen and has been notified to the shop.`}</b></h5>
+                        </div>
                         :
                         null
                   )
@@ -349,22 +363,22 @@ class Main extends Component {
           this.props.account == this.props.repairAccount
             ?
             <div id="content" className="div-style">
-              <h4><b>Notifications and Feed</b></h4>
-              <h6><i>Repair Orders :</i></h6>
+              <h4><b>Repair orders :</b></h4>
               {
                 this.props.products.map((product, key) => {
                   console.log(product)
                   return (
                     product.claimedRepair && !product.isRepaired
                       ?
-                      <div className='mb-3 mt-3'>
-                        <h5><b><i>{`${product.name}`}</i></b></h5>
-                        <button className='mr-2 btn btn-primary' name={product.id} onClick={this.repaired}>Repair</button>
+                      <div className='mb-3 mt-3 notification-border shadow p-2'>
+                        <h5><b>{`${product.name} owned by ${product.owner} is claimed to be repair.`}<button className='ml-2 btn btn-primary' name={product.id} onClick={this.repaired}>Repair</button></b></h5>
                       </div>
                       :
                       product.isRepaired
                         ?
-                        <h6 className='mt-3'><b><i>{`${product.name} owned by ${product.owner} has been repaired.`}</i></b></h6>
+                        <div className='mb-3 mt-3 notification-border shadow p-2'>
+                          <h5><b>{`${product.name} owned by ${product.owner} has been repaired.`}</b></h5>
+                        </div>
                         :
                         null
                   )
