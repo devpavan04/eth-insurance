@@ -17,9 +17,7 @@ class App extends Component {
       policeAccount: '',
       repairAccount: ''
     }
-    this.createProduct = this.createProduct.bind(this)
-    this.purchaseProduct = this.purchaseProduct.bind(this)
-    this.purchaseInsurance = this.purchaseInsurance.bind(this)
+    this.web3 = new Web3('HTTP://127.0.0.1:7545')
   }
 
   async componentWillMount() {
@@ -85,9 +83,6 @@ class App extends Component {
   }
 
   createProduct = (name, price, insurancePrice) => {
-    console.log(name)
-    console.log(price)
-    console.log(insurancePrice)
     this.setState({ loading: true })
     this.state.insurance.methods.createProduct(name, price, insurancePrice).send({ from: this.state.account })
       .on('receipt', (receipt) => {
@@ -97,8 +92,6 @@ class App extends Component {
   }
 
   purchaseProduct = (id, price) => {
-    console.log(id)
-    console.log(price)
     this.setState({ loading: true })
     this.state.insurance.methods.purchaseProduct(id, this.state.repairAccount, this.state.policeAccount).send({ from: this.state.account, value: price })
       .on('receipt', (receipt) => {
@@ -111,27 +104,44 @@ class App extends Component {
     this.state.insurance.methods.purchaseInsurance(id, this.state.repairAccount, this.state.policeAccount).send({ from: this.state.account, value: insurancePrice })
       .on('receipt', (receipt) => {
         console.log(receipt);
+        this.setState({ loading: false })
       })
   }
 
   policeClaim = (id) => {
     this.setState({ loading: true })
     this.state.insurance.methods.claimPolice(id, this.state.repairAccount, this.state.policeAccount).send({ from: this.state.account })
+      .on('receipt', (receipt) => {
+        console.log(receipt);
+        this.setState({ loading: false })
+      })
   }
 
   repairClaim = (id) => {
     this.setState({ loading: true })
     this.state.insurance.methods.claimRepair(id, this.state.repairAccount, this.state.policeAccount).send({ from: this.state.account })
+      .on('receipt', (receipt) => {
+        console.log(receipt);
+        this.setState({ loading: false })
+      })
   }
 
   stolen = (id) => {
     this.setState({ loading: true })
     this.state.insurance.methods.stolen(id, this.state.repairAccount, this.state.policeAccount).send({ from: this.state.account })
+      .on('receipt', (receipt) => {
+        console.log(receipt);
+        this.setState({ loading: false })
+      })
   }
 
   repaired = (id) => {
     this.setState({ loading: true })
     this.state.insurance.methods.repaired(id, this.state.repairAccount, this.state.policeAccount).send({ from: this.state.account })
+      .on('receipt', (receipt) => {
+        console.log(receipt);
+        this.setState({ loading: false })
+      })
   }
 
   reimburse = (id, productPrice) => {
@@ -139,14 +149,16 @@ class App extends Component {
     this.state.insurance.methods.reimburse(id, this.state.repairAccount, this.state.policeAccount).send({ from: this.state.account, value: productPrice })
       .on('receipt', (receipt) => {
         console.log(receipt);
+        this.setState({ loading: false })
       })
   }
 
   payRepairShop = (id, repairFee) => {
     this.setState({ loading: true })
     this.state.insurance.methods.payRepairShop(id, this.state.repairAccount, this.state.policeAccount).send({ from: this.state.account, value: repairFee })
-      .on('receipt', (receipt) => {
+      .once('receipt', (receipt) => {
         console.log(receipt);
+        this.setState({ loading: false })
       })
   }
 

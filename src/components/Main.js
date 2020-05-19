@@ -7,10 +7,6 @@ import './App.css'
 
 class Main extends Component {
 
-  constructor() {
-    super();
-  }
-
   formSubmit = (event) => {
     event.preventDefault()
     const name = this.productName.value
@@ -59,12 +55,12 @@ class Main extends Component {
     console.log(this.props.products)
     return (
 
-      <div>
+      <div className='div-style'>
 
         {
           this.props.account == this.props.sellerAccount
             ?
-            <div className='div-style  styly-heading'>
+            <div className='sub-div-style  styly-heading'>
               <div className='float-right'>
                 <img src={Shop} width='300px'></img>
               </div>
@@ -79,7 +75,7 @@ class Main extends Component {
         {
           this.props.account == this.props.policeAccount
             ?
-            <div className='div-style'>
+            <div className='sub-div-style'>
               <div className='float-right'>
                 <img src={Police} width='300px'></img>
               </div>
@@ -94,7 +90,7 @@ class Main extends Component {
         {
           this.props.account == this.props.repairAccount
             ?
-            <div className='div-style'>
+            <div className='sub-div-style'>
               <div className='float-right'>
                 <img src={Repair} width='300px'></img>
               </div>
@@ -109,7 +105,7 @@ class Main extends Component {
         {
           this.props.account !== this.props.sellerAccount && this.props.account !== this.props.policeAccount && this.props.account !== this.props.repairAccount
             ?
-            <div className='div-style'>
+            <div className='sub-div-style'>
               <div className='float-right'>
                 <img src={Buyer} width='300px'></img>
               </div>
@@ -121,7 +117,7 @@ class Main extends Component {
             null
         }
 
-        <div id="content" className="div-style account-details">
+        <div id="content" className="sub-div-style account-details">
           <h4><b><i>Account Address :</i></b></h4>
           <h5>{this.props.account}</h5>
           <h4><b><i>Account Balance :</i></b></h4>
@@ -131,7 +127,7 @@ class Main extends Component {
         {
           this.props.account == this.props.sellerAccount
             ?
-            <div id="content" className="div-style form-style">
+            <div id="content" className="sub-div-style form-style">
               <h4><b>Add Product :</b></h4>
               <form onSubmit={this.formSubmit} className=''>
                 <div className="form-group mr-sm-2">
@@ -161,7 +157,7 @@ class Main extends Component {
                     placeholder="Insurance Price"
                     required />
                 </div>
-                <button type="submit" className="btn btn-primary">Add Product</button>
+                <button type="submit" className="btn btn-dark">Add Product</button>
               </form>
             </div>
             :
@@ -171,21 +167,21 @@ class Main extends Component {
         {
           this.props.account !== this.props.policeAccount && this.props.account !== this.props.repairAccount
             ?
-            <div id="content" className="div-style">
+            <div id="content" className="sub-div-style">
               <h4 className='mb-3'><b>Buy Product with Insurance :</b></h4>
-              <table className="table table-bordered table-striped text-center table-dark">
-                <thead id='table-head'>
+              <table className="table text-center table-dark table-borderless table-striped table-hover table-style">
+                <thead id='table-head' className='thead-light'>
                   <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Product Owner</th>
-                    <th scope="col">Product Price</th>
-                    <th scope="col">Buy Product</th>
-                    <th scope="col">Insurance Price</th>
-                    <th scope="col">Buy Insurance</th>
-                    <th scope="col">Police</th>
-                    <th scope="col">Repair</th>
-                    <th scope="col">Claim update</th>
+                    <th scope="col"><i>No.</i></th>
+                    <th scope="col"><i>Name</i></th>
+                    <th scope="col"><i>Product Owner</i></th>
+                    <th scope="col"><i>Product Price</i></th>
+                    <th scope="col"><i>Buy Product</i></th>
+                    <th scope="col"><i>Insurance Price</i></th>
+                    <th scope="col"><i>Buy Insurance</i></th>
+                    <th scope="col"><i>Police</i></th>
+                    <th scope="col"><i>Repair</i></th>
+                    <th scope="col"><i>Claim update</i></th>
                   </tr>
                 </thead>
                 <tbody id="productList">
@@ -268,15 +264,14 @@ class Main extends Component {
                               ?
                               <div>
                                 <i className='mr-2'><b>Repaired!</b></i>
-                                <br></br>
-                                <button className='btn btn-primary btn-block' type="submit" name={product.id} value={product.price / 2} onClick={this.payRepairShop}>Pay Repair</button>
+                                <button className='btn btn-primary btn-block mt-2' type="submit" name={product.id} value={product.price / 2} onClick={this.payRepairShop}>Pay Repair</button>
                               </div>
                               :
                               product.isStolen && !product.isReimbursed
                                 ?
                                 <div>
                                   <i><b>Stolen!</b></i>
-                                  <button className='btn btn-primary btn-block' type="submit" name={product.id} value={product.price} onClick={this.reimburse}>Reimburse</button>
+                                  <button className='btn btn-primary btn-block mt-2' type="submit" name={product.id} value={product.price} onClick={this.reimburse}>Reimburse</button>
                                 </div>
                                 :
                                 !product.purchased
@@ -332,7 +327,7 @@ class Main extends Component {
         {
           this.props.account == this.props.policeAccount
             ?
-            <div id="content" className="div-style">
+            <div id="content" className="sub-div-style">
               <h4><b>Notifications and Feed :</b></h4>
               {
                 this.props.products.map((product, key) => {
@@ -340,13 +335,13 @@ class Main extends Component {
                   return (
                     product.claimedPolice && !product.isStolen
                       ?
-                      <div className='mb-3 mt-3 notification-border shadow p-2'>
-                        <h5><b>{`${product.name} owned by ${product.owner} is claimed to be stolen, please verify.`}<button className='ml-2 btn btn-dark' name={product.id} onClick={this.stolen}>Stolen</button></b></h5>
+                      <div className='mb-3 mt-3 notification-border shadow p-3'>
+                        <h5><b>{`${product.name} owned by ${product.owner} is claimed to be stolen, please verify.`}<button className='ml-2 btn btn-dark btn-lg' name={product.id} onClick={this.stolen}>Stolen</button></b></h5>
                       </div>
                       :
                       product.isStolen
                         ?
-                        <div className='mb-3 mt-3 notification-border shadow p-2'>
+                        <div className='mb-3 mt-3 notification-border shadow p-3'>
                           <h5><b>{`${product.name} owned by ${product.owner} is stolen and has been notified to the shop.`}</b></h5>
                         </div>
                         :
@@ -362,7 +357,7 @@ class Main extends Component {
         {
           this.props.account == this.props.repairAccount
             ?
-            <div id="content" className="div-style">
+            <div id="content" className="sub-div-style">
               <h4><b>Repair orders :</b></h4>
               {
                 this.props.products.map((product, key) => {
@@ -370,13 +365,13 @@ class Main extends Component {
                   return (
                     product.claimedRepair && !product.isRepaired
                       ?
-                      <div className='mb-3 mt-3 notification-border shadow p-2'>
-                        <h5><b>{`${product.name} owned by ${product.owner} is claimed to be repair.`}<button className='ml-2 btn btn-primary' name={product.id} onClick={this.repaired}>Repair</button></b></h5>
+                      <div className='mb-3 mt-3 notification-border shadow p-3'>
+                        <h5><b>{`${product.name} owned by ${product.owner} is claimed to be repair.`}<button className='ml-2 btn btn-dark btn-lg' name={product.id} onClick={this.repaired}>Repair</button></b></h5>
                       </div>
                       :
                       product.isRepaired
                         ?
-                        <div className='mb-3 mt-3 notification-border shadow p-2'>
+                        <div className='mb-3 mt-3 notification-border shadow p-3'>
                           <h5><b>{`${product.name} owned by ${product.owner} has been repaired.`}</b></h5>
                         </div>
                         :
