@@ -1,7 +1,9 @@
 pragma solidity ^0.5.0;
 
 contract Insurance {
+
     uint256 public productCount = 0;
+
     mapping(uint256 => Product) public products;
 
     struct Product {

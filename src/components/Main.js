@@ -276,6 +276,7 @@ class Main extends Component {
                                 :
                                 !product.purchased
                                   ?
+
                                   <i>Buy Product</i>
                                   :
                                   !product.insurancePurchased
