@@ -212,15 +212,15 @@ class Main extends Component {
                           {
                             !product.claimedPolice && !product.claimedRepair && product.purchased && product.insurancePurchased
                               ?
-                              <button className='btn btn-primary btn-block' type="submit" name={product.id} onClick={this.claimPolice}>Claim Police</button>
+                              <button className='btn btn-primary btn-block' type="submit" name={product.id} onClick={this.claimPolice}>Stolen</button>
                               :
                               product.claimedPolice
                                 ?
-                                <i>Police claimed</i>
+                                <i>Informed police</i>
                                 :
                                 product.claimedRepair
                                   ?
-                                  <i>Claimed repair already!</i>
+                                  <i>Repair service claimed</i>
                                   :
                                   !product.purchased
                                     ?
@@ -237,15 +237,15 @@ class Main extends Component {
                           {
                             !product.claimedRepair && !product.claimedPolice && product.purchased && product.insurancePurchased
                               ?
-                              <button className='btn btn-primary btn-block' type="submit" name={product.id} onClick={this.claimRepair}>Claim Repair</button>
+                              <button className='btn btn-primary btn-block' type="submit" name={product.id} onClick={this.claimRepair}>Broken</button>
                               :
                               product.claimedRepair
                                 ?
-                                <i>Repair claimed</i>
+                                <i>Repair service claimed</i>
                                 :
                                 product.claimedPolice
                                   ?
-                                  <i>Claimed police already!</i>
+                                  <i>--</i>
                                   :
                                   !product.purchased
                                     ?
@@ -264,7 +264,7 @@ class Main extends Component {
                               ?
                               <div>
                                 <i className='mr-2'><b>Repaired!</b></i>
-                                <button className='btn btn-primary btn-block mt-2' type="submit" name={product.id} value={product.price / 2} onClick={this.payRepairShop}>Pay Repair</button>
+                                <button className='btn btn-primary btn-block mt-2' type="submit" name={product.id} value={product.price / 2} onClick={this.payRepairShop}>Pay Repair Shop</button>
                               </div>
                               :
                               product.isStolen && !product.isReimbursed
@@ -337,7 +337,7 @@ class Main extends Component {
                     product.claimedPolice && !product.isStolen
                       ?
                       <div className='mb-3 mt-3 notification-border shadow p-3'>
-                        <h5><b>{`${product.name} owned by ${product.owner} is claimed to be stolen, please verify.`}<button className='ml-2 btn btn-dark btn-lg' name={product.id} onClick={this.stolen}>Stolen</button></b></h5>
+                        <h5><b>{`${product.name} owned by ${product.owner} is claimed to be stolen, please verify.`}<button className='ml-2 btn btn-dark btn-lg' name={product.id} onClick={this.stolen}>Stolen</button><button className='ml-2 btn btn-dark btn-lg'>Not Stolen</button></b></h5>
                       </div>
                       :
                       product.isStolen
@@ -367,7 +367,7 @@ class Main extends Component {
                     product.claimedRepair && !product.isRepaired
                       ?
                       <div className='mb-3 mt-3 notification-border shadow p-3'>
-                        <h5><b>{`${product.name} owned by ${product.owner} is claimed to be repair.`}<button className='ml-2 btn btn-dark btn-lg' name={product.id} onClick={this.repaired}>Repair</button></b></h5>
+                        <h5><b>{`${product.name} owned by ${product.owner} is claimed to be repair.`}<button className='ml-2 btn btn-dark btn-lg' name={product.id} onClick={this.repaired}>Repaired</button><button className='ml-2 btn btn-dark btn-lg'>Cannot be repaired</button></b></h5>
                       </div>
                       :
                       product.isRepaired
