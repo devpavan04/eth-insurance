@@ -49,18 +49,15 @@ class App extends Component {
     const web3 = window.web3
 
     const accounts = await web3.eth.getAccounts()
-    console.log(accounts)
     this.setState({ account: accounts[0] })
 
     let accountBalance = await web3.eth.getBalance(accounts[0]);
     accountBalance = web3.utils.fromWei(accountBalance, 'ether')
-    this.setState({ accountBalance })
+    this.setState({ accountBalance: accountBalance })
 
     const networkId = await web3.eth.net.getId()
-    console.log(networkId)
 
     const networkData = Insurance.networks[networkId]
-    console.log(networkData)
 
     if (networkData) {
       const insurance = web3.eth.Contract(Insurance.abi, networkData.address)
@@ -168,7 +165,7 @@ class App extends Component {
           {this.state.loading
             ?
             <div id="loader"
-              className="text-center mt-5"><p className="text-center"></p></div>
+              className="text-center mt-5"><p className="text-center">Loading....</p></div>
             :
             <Main
               products={this.state.products}

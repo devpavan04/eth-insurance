@@ -237,7 +237,6 @@ contract Insurance {
       uint256 repairCharge = _product.price / 2;
       require(_product.isRepaired, 'not repaired');
       require(msg.value == repairCharge, 'repair charge is not correct');
-      require(_repairShop != msg.sender, 'repair shop cannot pay himself the repair amount');
       require(_repairShop != msg.sender, "repair cannot pay himself");
       require(_police != msg.sender, "police cannot pay the repair");
       require(msg.sender == _product.insuranceOwner, "only product shop can do this");

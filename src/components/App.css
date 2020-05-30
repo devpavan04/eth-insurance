@@ -1,5 +1,5 @@
 body {
-  background-image: linear-gradient(to top, #ff9a9e 100%, #fecfef 100%, #fecfef 100%);
+  background-image: linear-gradient(to top, #dfe9f3 0%, white 100%);
 }
 
 .sub-div-style {
@@ -27,7 +27,7 @@ body {
 
 .notification-border {
   border-radius: 5px;
-  width: fit-content;
+  width: 1400px;
   box-shadow: 8px 6px -6px black;
   background-color: rgb(137, 195, 250);
 }

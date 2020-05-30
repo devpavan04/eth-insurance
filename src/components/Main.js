@@ -52,10 +52,9 @@ class Main extends Component {
   }
 
   render() {
-    console.log(this.props.products)
     return (
 
-      <div className='div-style'>
+      < div className='div-style' >
 
         {
           this.props.account == this.props.sellerAccount
@@ -170,7 +169,7 @@ class Main extends Component {
             <div id="content" className="sub-div-style">
               <h4 className='mb-3'><b>Buy Product with Insurance :</b></h4>
               <table className="table text-center table-dark table-borderless table-striped table-hover table-style">
-                <thead id='table-head' className='thead-light'>
+                <thead id='table-head'>
                   <tr>
                     <th scope="col"><i>No.</i></th>
                     <th scope="col"><i>Name</i></th>
@@ -186,6 +185,7 @@ class Main extends Component {
                 </thead>
                 <tbody id="productList">
                   {this.props.products.map((product, key) => {
+                    console.log(this.props.account)
                     console.log(product)
                     return (
                       <tr key={key}>
@@ -337,7 +337,7 @@ class Main extends Component {
                     product.claimedPolice && !product.isStolen
                       ?
                       <div className='mb-3 mt-3 notification-border shadow p-3'>
-                        <h5><b>{`${product.name} owned by ${product.owner} is claimed to be stolen, please verify.`}<button className='ml-2 btn btn-dark btn-lg' name={product.id} onClick={this.stolen}>Stolen</button><button className='ml-2 btn btn-dark btn-lg'>Not Stolen</button></b></h5>
+                        <h5><b>{`${product.name} owned by ${product.owner} is claimed to be stolen, please verify.`}<button className='ml-4 btn btn-dark btn-lg' name={product.id} onClick={this.stolen}>Stolen</button><button className='ml-3 btn btn-dark btn-lg'>Not Stolen</button></b></h5>
                       </div>
                       :
                       product.isStolen
@@ -367,7 +367,7 @@ class Main extends Component {
                     product.claimedRepair && !product.isRepaired
                       ?
                       <div className='mb-3 mt-3 notification-border shadow p-3'>
-                        <h5><b>{`${product.name} owned by ${product.owner} is claimed to be repair.`}<button className='ml-2 btn btn-dark btn-lg' name={product.id} onClick={this.repaired}>Repaired</button><button className='ml-2 btn btn-dark btn-lg'>Cannot be repaired</button></b></h5>
+                        <h5><b>{`${product.name} owned by ${product.owner} is claimed to be repair.`}<button className='ml-4 btn btn-dark btn-lg' name={product.id} onClick={this.repaired}>Repaired</button><button className='ml-3 btn btn-dark btn-lg'>Cannot be repaired</button></b></h5>
                       </div>
                       :
                       product.isRepaired
@@ -385,7 +385,7 @@ class Main extends Component {
             null
         }
 
-      </div>
+      </div >
     );
   }
 }
