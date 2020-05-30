@@ -41,13 +41,13 @@ npm start
 ## Snapshots :
 
 ### Shop
-![alt text](https://github.com/devpavan04/eth-marketplace/blob/master/snapshots/IMG-20200527-WA0007.jpg?raw=true)
+![alt text](https://github.com/devpavan04/eth-insurance/blob/master/snapshots/Screenshot%20from%202020-05-30%2014-52-39.png?raw=true)
 
 ### Police
-![alt text](https://github.com/devpavan04/eth-marketplace/blob/master/snapshots/IMG-20200527-WA0008.jpg?raw=true)
+![alt text](https://github.com/devpavan04/eth-insurance/blob/master/snapshots/Screenshot%20from%202020-05-30%2015-01-54.png?raw=true)
 
 ### Repair
-![alt text](https://github.com/devpavan04/eth-marketplace/blob/master/snapshots/IMG-20200527-WA0009.jpg?raw=true)
+![alt text](https://github.com/devpavan04/eth-insurance/blob/master/snapshots/Screenshot%20from%202020-05-30%2015-03-32.png?raw=true)
 
 ### Buyer
-![alt text](https://github.com/devpavan04/eth-marketplace/blob/master/snapshots/IMG-20200527-WA0010.jpg?raw=true)
+![alt text](https://github.com/devpavan04/eth-insurance/blob/master/snapshots/Screenshot%20from%202020-05-30%2015-05-51.png?raw=true)
